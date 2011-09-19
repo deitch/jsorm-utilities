@@ -17,13 +17,6 @@
         classname="net.matthaynes.jsmin.JSMin_Task"
         classpath="/Library/Java/lib/jsmin.0.2.2a.jar"/>
 
-<scriptdef name="jslint"
-        src="/Users/adeitcher/Documents/Development/js/jslint/jslintant.js"
-        language="javascript">
-    <attribute name="options"/>
-    <element name="fileset" type="fileset"/>
-</scriptdef>
-
 
 <!-- 
 Build all Java source files into destdir.  This is common in Java
@@ -72,12 +65,6 @@ just one file at a time.
 
 	<target name="all" depends="dist">
 			
-	</target>
-
-	<target name="test">
-		<jslint options="{passfail: false, browser: true}">
-			<fileset dir="${src}" includes="*.js" excludes="SecureStore.js"/>
-		</jslint>
 	</target>
 
 	
