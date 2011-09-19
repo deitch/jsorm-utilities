@@ -5,6 +5,7 @@
 <project name="jsorm" default="all" basedir=".">
   <property name="src" value="./src"/>
   <property name="build" value="./build"/>
+  <property name="buildnode" value="./buildnode"/>
   <property name="dist" value="./dist"/>
   <property name="sample" value="./sample"/>
   <property name="license" value="./license.js"/>
@@ -52,6 +53,20 @@ just one file at a time.
 		<replace file="${build}/${basename}.js" token="@@version@@" value="${version}"/>		
 		<replace file="${build}/${basename}-${version}-src.js" token="@@version@@" value="${version}"/>		
 		<replace file="${dist}/${basename}-${version}-min-nolicense.js" token="@@version@@" value="${version}"/>		
+		
+		
+		<!-- set up node-ready version -->
+	    <mkdir dir="${buildnode}/lib"/>
+		
+		<!-- combine the files into build/ and add the license -->
+		<concat destfile="${buildnode}/lib/${basename}.js">
+			<fileset file="${license}"/>
+			<fileset dir="${src}" includes="*.js"/>
+		</concat>
+		<!-- include version in file -->
+		<replace file="${buildnode}/lib/${basename}.js" token="@@version@@" value="${version}"/>		
+		<!-- add the package.json -->
+		<copy file="package.json" tofile="${buildnode}/package.json"/>	
     </target>
 
 	<target name="dist" depends="build">
@@ -61,6 +76,11 @@ just one file at a time.
 			<fileset dir="." includes="README.txt"/>
  			<fileset dir="." includes="license.txt"/>
 		</zip>
+		
+		<!-- create a node version -->
+		<copy todir="${dist}/node">
+			<fileset dir="${buildnode}"/>
+		</copy>
 	</target>
 
 	<target name="all" depends="dist">
@@ -76,6 +96,7 @@ does not already exist.
 -->
   <target name="init">
     <mkdir dir="${build}"/>
+    <mkdir dir="${buildnode}"/>
 	<mkdir dir="${dist}"/>
   </target>
 
@@ -89,6 +110,7 @@ such as when changing to a new version of the JDK.
   <target name="clean" description="Removes previous build">
     <delete verbose="true">
 		<fileset dir="${build}"/>
+		<fileset dir="${buildnode}"/>
 	    <fileset dir="${dist}"/>
 	</delete>
   </target>

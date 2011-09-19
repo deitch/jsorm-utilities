@@ -463,4 +463,4 @@
 
 		return(that);
 	};
-}(this.module === undefined || this.module.exports === undefined ? (this.JSORM === undefined || this.JSORM === null ? this.JSORM = {} : this.JSORM) : this.module.exports));
+}(module === undefined || module.exports === undefined ? (this.JSORM === undefined || this.JSORM === null ? this.JSORM = {} : this.JSORM) : module.exports));
