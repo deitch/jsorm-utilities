@@ -1,0 +1,14 @@
+{ 
+	"name": "jsorm-utilities", 
+	"description": "A JavaScript library for basic utilities",
+	"version": "1.3.0",
+	"url": "http://github.com/deitch/jsorm-utilities",
+	"author": "Avi Deitcher <avi@deitcher.net>",
+	"engines": ["node >= 0.3"],
+	"main": "./lib/jsorm.js", 
+	"test": "./test.js",
+	"repository": {
+		"type" : "git",
+		"url" : "http://github.com/deitch/jsorm-utilities.git"
+	}
+}

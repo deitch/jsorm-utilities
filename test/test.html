@@ -1,0 +1,123 @@
+<html>
+	<head>
+		<title>jsorm utilities Test Application</title>
+		<script src="../../yui_3.0.0.pr2/build/yui/yui-min.js"></script> 
+		<script src="jsorm.js"></script>
+		
+		<!-- end of actual tests for individual calendars -->
+		
+		<script type="text/javascript">
+			/*global YUI, JSORM */
+			var tests = [
+				"ALL","Array","clear","apply","common","first","compare","clone","iclone","zeropad","ajax","extend","eventualize"
+			];
+			var testFn = {
+				testALL: function(Y) {
+					var i, suite;
+					// run all of them except myself
+					suite = new Y.Test.Suite("ALL Tests");
+					for (i in testFn) {
+						if (testFn.hasOwnProperty(i) && i !== "testALL") {
+							console.log(i);
+							suite.add(testFn[i](Y));
+						}
+					}
+				},
+				testArray: function(Y) {
+					var ary = [1,2,3], obj = {}, str = "";
+					return new Y.Test.Case({
+						name : "Array Tests",
+						testIsArray : function() {
+							Y.Assert.areEqual(typeof ary.isArray,"boolean","Array should have isArray boolean");
+							Y.Assert.areEqual(typeof obj.isArray,"undefined","Object should not have isArray");
+							Y.Assert.areEqual(typeof str.isArray,"undefined","String should not have isArray");
+							Y.Assert.areEqual(ary.isArray,true,"Array should have isArray === true");
+						}
+					});
+				},
+				testApply: function(Y) {
+					var a = {a:1}, b = {b:2};
+					return new Y.Test.Case({
+						name : "Apply Tests",
+						testApply : function() {
+							JSORM.apply(a,b);
+							Y.Assert.areEqual(a.a,1,"a should still have 'a' of value 1");
+							Y.Assert.areEqual(a.b,2,"a should also have 'b' of value 2");
+							Y.Assert.areEqual(b.b,2,"b should still have 'b' of value 2");
+							Y.Assert.areEqual(b.a,undefined,"b should not have 'a'");
+						}
+					});
+				}
+			};
+			function go(test) {
+				var local = true, conf, f;
+				conf = {
+					base: '../../yui_3.0.0.pr2/build/'
+				};
+				f = (function() {
+					return function(Y) {
+						var i, list, yconsole;
+						if (test !== null) {
+							Y.Test.Runner.add(test(Y));							
+						} else {
+							for (i=0;i<tests.length;i++) {
+								if (tests[i].fn !== null) {
+									Y.Test.Runner.add(tests[i].fn(Y));																
+								}
+							}
+						}
+						//Y.config.useBrowserConsole = true;
+						
+						yconsole = new Y.Console({ 
+							boundingBox: '#basic',
+							newestOnTop: false                    
+						}).render('#results');	
+						
+						Y.Test.Runner.run();						
+					};
+				}());
+				YUI(local?conf:null).use("yuitest","console",f);
+				return(false);
+			}
+			function init() {
+				var li, a, ul, i, fn, makeFn, testName;
+				
+				makeFn = function(fn) {
+					return function(){
+						go(fn);
+					};
+				};
+				// now set up the tests
+				ul = document.getElementById('testList');
+				for (i=0;i<tests.length;i++) {
+					li = document.createElement('li');
+					ul.appendChild(li);
+					testName = "test"+tests[i].charAt(0).toUpperCase() + tests[i].slice(1);
+					if (testFn && testFn[testName]) {
+						fn = testFn[testName];
+						a = document.createElement('a');
+						li.appendChild(a);
+						a.innerHTML = tests[i];
+						a.href = "#";
+						a.onclick = makeFn(fn);
+					} else {
+						li.innerHTML = tests[i]+" (not implemented)";
+					}
+				}
+			}
+			
+			// register the event handler
+			window.onload = init;
+		</script>
+	</head>
+	<body>
+		<h1>jsorm-utilities Test Application</h1>
+		<div id="tests" style="float:left; width:33%;">
+			<p>Pick a section to test</p>
+			<ul id="testList">
+			</ul>
+		</div>
+		<div id="results" style="float:left;"></div>
+
+	</body>
+</html>
