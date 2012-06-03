@@ -252,9 +252,9 @@
 	exports.fork = (function() {
 		// check if we are running browser or Java based
 		var fork, window = this, t;
-		if (window && window.setTimeout && typeof(window.setTimeout) === "function") {
+		if (typeof(window) !== "undefined" && window.setTimeout && typeof(window.setTimeout) === "function") {
 			fork = function(f) {window.setTimeout(f,1);};
-		} else if (java && java.lang && java.lang.Thread && typeof(java.lang.Thread) === "function"){
+		} else if (typeof(java) !== "undefined" && java.lang && java.lang.Thread && typeof(java.lang.Thread) === "function"){
 			fork = function(f) {
 				t = new java.lang.Thread(new java.lang.Runnable({run: function(){f();}})).start();
 			};
@@ -463,4 +463,4 @@
 
 		return(that);
 	};
-}(module === undefined || module.exports === undefined ? (this.JSORM === undefined || this.JSORM === null ? this.JSORM = {} : this.JSORM) : module.exports));
+}(typeof(module) === "undefined" || typeof(module.exports) === "undefined" ? (this.JSORM === undefined || this.JSORM === null ? this.JSORM = {} : this.JSORM) : module.exports));
